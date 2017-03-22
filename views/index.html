@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %} The Trip! {% endblock %}
+
+{% block content %}
+<div id="app" class="clearfix">
+	<div class="map-container col-sm-8 col-lg-8 clearfix">
+		<div id="map-canvas"></div>
+	</div>
+	<div id="control-panel" class="col-sm-4 col-lg-4 clearfix">
+	<div class="panel panel-default">
+		<div class="panel-body" id="options-panel">
+			<div>
+				<h3>Hotels</h3>
+				<select id=hotels data-type="hotels">	
+				</select>
+				<button data-action="add" data-from=#hotels class="add btn btn-primary btn-circle pull-right">+</button>
+			</div>
+			<div>
+				<h3>Food</h3>
+				<select id=restaurants data-type="restaurants">		
+				</select>
+				<button data-action="add" data-from=#restaurants class="add btn btn-primary btn-circle pull-right">+</button>
+			</div>
+			<div>
+				<h3>Activities</h3>
+				<select id=activities data-type="activities">		
+				</select>
+				<button data-action="add" data-from=#activities class="add btn btn-primary btn-circle pull-right">+</button>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<button class="addDay btn btn-primary btn-circle pull-right">+ day</button>
+		</div>
+	</div>
+</div>
+{% endblock %}
