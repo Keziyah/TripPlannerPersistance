@@ -90,26 +90,52 @@ $(function initializeMap () {
   // dataset item instead:
   //
   //   $('button[data-action="add"]').click(
-  $('button.add').click(
-    evt =>
-      $(evt.target.dataset.from)
-        .find('option:selected')
-        .each((_i, option) => {
-          const item = option.item
-              , type = $(option)
-                  .closest('select')[0]
-                  .dataset.type
+  // $('button.add').on('click',
+  //   evt =>
+  //     $(evt.target.dataset.from)
+  //       .find('option:selected')
+  //       .each((_i, option) => {
+  //         const item = option.item
+  //             , type = $(option)
+  //                 .closest('select')[0]
+  //                 .dataset.type
+  //
+  //         // Make a li out of this item
+  //         const li = $(`<li>${item.name} <button class='del'>x</button></li>`)[0]
+  //         // Draw a marker on the map and attach the marker to the li
+  //         li.marker = drawMarker(type, item.place.location)
+  //
+  //         // Add this item to our itinerary for the current day
+  //         $('.current.day').append(li)
+  //       })
+  // )
 
-          // Make a li out of this item
-          const li = $(`<li>${item.name} <button class='del'>x</button></li>`)[0]
+  $('button.add').on('click', function(e) {
+    var target = e.target;
+    var selected = $(target).siblings('select').find('option:selected')[0];
+    //console.log($(target))
+    var selectedName = $(selected).text();
+    var typeid = $(target).siblings('select').attr('id')
+    var currDay = $('.current');  //THIS NEEDS TO BE A NUMBER
+    var currString = currDay.text()
+        currString = currString.split("day ")
+        currString = currString[1].split("x")
+        currString = currString[0];  //Ok, now I have the day number
+    console.log(currString)
 
-          // Draw a marker on the map and attach the marker to the li
-          li.marker = drawMarker(type, item.place.location)
+    console.log(typeid)
+    switch(typeid) {
+      case "hotels":
+      $('.current').children('.hotelList').append('<li>' + selectedName + '</li>'); break;
+      case "restaurants":
+      $('.current').children('.restList').append('<li>' + selectedName + '</li>'); break;
+      case "activities":
+      $('.current').children('.actList').append('<li>' + selectedName + '</li>'); break;
+    }
 
-          // Add this item to our itinerary for the current day
-          $('.current.day').append(li)
-        })
-  )
+    addItemToDay(currString, typeid, selectedName);
+
+  })
 
   // 3. Wire up delete buttons
   $(document).on('click', 'button.del',
@@ -142,21 +168,29 @@ $(function initializeMap () {
     )
   }
 
-  //TODO: when switching days, display the day's data in the list below.
+  //TODO: when switching days, display the day's data in the list below it.
   //All of the db data is already in the broswer when the page loads.
-  // Add a div under each day that is clicked. 
+  // Add a div under each day that is clicked.
 
   // 5. Deal with switching days
   $(document).on('click', '.day-head',
     evt => {
+      $('div').remove('.showDay')  //remove the div that shows that day's data
       $('.day.current').removeClass('current')
+
       const $day = $(evt.target).closest('.day')
 
       $('li').each((_i, li) => li.marker && li.marker.setMap(null))
       $day.addClass('current')
+      $day.append('<div class="showDay hotelList"><h4>Hotels</h4></div'); //append a div with hotels
+
+      $day.append('<div class="showDay restList"><h4>Restaurants</h4></div'); //append a div with restaurants
+      $day.append('<div class="showDay actList"><h4>Activities</h4></div'); //Append a div with activities
       $day.find('li').each((_i, li) => li.marker.setMap(currentMap))
     }
   )
+//TODO:
+  //for each item in the array, append the db data into a ul/li to it's appropriate div.
 
   // 6. Remove a day
   $(document).on('click', 'button.delDay',
@@ -267,6 +301,24 @@ function deleteDay(id) {
 }
 
 //called on line 169
+
+//*************************************************************************
+//addItemToDay: Adds a hotel, restaurant, or activity to a day
+//*************************************************************************
+//*************************************************************************
+
+//when you click the add button, this will send a post request with the day#, the name of the place, and the type of activity
+function addItemToDay(dayNum, placeType, placeName) {
+  $.ajax({
+    method: 'POST',
+    url: '/api/add',
+    data: {day: dayNum, type: placeType, name: placeName}
+    })
+    .then(data => { console.log('POST response data: ', data) })
+    .catch(console.error.bind(console));
+}
+
+//called on line 121
 
 // function ajax1() {
 // $.ajax({

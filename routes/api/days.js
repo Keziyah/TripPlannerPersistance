@@ -34,8 +34,19 @@ router.get('/days', (req, res, next) => {  //get a list of all the days to post 
 
 })
 
-router.get('/days/:id', (req, res, next) => {  //get a specific day
-	res.send("YOU GOT A DAY OMG YOURE SO COOL")
+// router.get('/days/:id', (req, res, next) => {  //get a specific day
+// 	res.send("YOU GOT A DAY OMG YOURE SO COOL")
+//
+// })
+
+router.post('/add', (req, res, next) => {
+	//console.log("REQ BODY", req.body) //this works. now we need to use that info to add the days to the db.
+	var day = Number(req.body.day);
+	var table = req.body.type;
+	var name = req.body.name;
+
+	//add the name to the db according to the appropritate table
+	//somehow join the table on the specific day.
 
 })
 
@@ -73,9 +84,9 @@ router.post('/days', (req, res, next) => {
 // })
 // .catch(next)
 
-router.post('/days/:id', (req, res, next) => {  //add a day
-	res.send("YOU MADE A DAY OMG YOURE SO COOL")
-})
+// router.post('/days/:id', (req, res, next) => {  //add a day
+// 	res.send("YOU MADE A DAY OMG YOURE SO COOL")
+// })
 
 //the parameter will look like id=6
 router.delete('/days/:idObj', (req, res, next) => { //delete a day
@@ -99,9 +110,6 @@ router.delete('/days/:idObj', (req, res, next) => { //delete a day
 //*****************************************//
 //*****************************************//
 
-router.post('/days/:id/:item', (req, res, next) => {
-
-})
 
 // router.delete('/days/:id/:item', (req, res, next) => {
 //
